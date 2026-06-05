@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YONIF TP 884/SA-IJAAN — Kotabaru, Kalimantan Selatan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { 50:'#fef2f2',100:'#fee2e2',200:'#fecaca',300:'#fca5a5',400:'#f87171',500:'#ef4444',600:'#dc2626',700:'#b91c1c',800:'#991b1b',900:'#7f1d1d',950:'#450a0a' },
+                        army: { dark:'#1a0000', mid:'#2d0a0a', gold:'#C5A55A', brass:'#B8860B' }
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1a0000; }
+        ::-webkit-scrollbar-thumb { background: #991b1b; border-radius: 4px; }
+
+        /* Hero Slider */
+        .hero-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.5s ease-in-out; }
+        .hero-slide.active { opacity: 1; }
+
+        /* Animations */
+        @keyframes fadeInUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes fadeInLeft { from { opacity:0; transform:translateX(-30px); } to { opacity:1; transform:translateX(0); } }
+        @keyframes fadeInRight { from { opacity:0; transform:translateX(30px); } to { opacity:1; transform:translateX(0); } }
+        @keyframes scaleIn { from { opacity:0; transform:scale(0.9); } to { opacity:1; transform:scale(1); } }
+        @keyframes pulse-glow { 0%,100% { box-shadow: 0 0 20px rgba(185,28,28,0.3); } 50% { box-shadow: 0 0 40px rgba(185,28,28,0.6); } }
+        @keyframes slideDown { from { transform: translateY(-100%); opacity:0; } to { transform: translateY(0); opacity:1; } }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes countUp { from { opacity:0; transform: scale(0.5); } to { opacity:1; transform: scale(1); } }
+
+        .animate-on-scroll { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        .animate-on-scroll.visible { opacity: 1; transform: translateY(0); }
+        .animate-left { opacity: 0; transform: translateX(-30px); transition: all 0.8s ease-out; }
+        .animate-left.visible { opacity: 1; transform: translateX(0); }
+        .animate-right { opacity: 0; transform: translateX(30px); transition: all 0.8s ease-out; }
+        .animate-right.visible { opacity: 1; transform: translateX(0); }
+        .animate-scale { opacity: 0; transform: scale(0.9); transition: all 0.8s ease-out; }
+        .animate-scale.visible { opacity: 1; transform: scale(1); }
+
+        /* Marquee */
+        .marquee-track { animation: marquee 30s linear infinite; }
+        .marquee-track:hover { animation-play-state: paused; }
+
+        /* Garuda Pattern */
+        .garuda-pattern { 
+            background-image: radial-gradient(circle at 20% 50%, rgba(185,28,28,0.1) 0%, transparent 50%),
+                              radial-gradient(circle at 80% 50%, rgba(197,165,90,0.05) 0%, transparent 50%);
+        }
+
+        /* Nav active */
+        .nav-link { position: relative; }
+        .nav-link::after { content:''; position:absolute; bottom:-2px; left:50%; width:0; height:2px; background:#dc2626; transition:all 0.3s; transform:translateX(-50%); }
+        .nav-link:hover::after, .nav-link.active::after { width:100%; }
+
+        /* Card hover */
+        .card-hover { transition: all 0.4s ease; }
+        .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 60px rgba(185,28,28,0.2); }
+
+        /* Gallery */
+        .gallery-item { overflow: hidden; }
+        .gallery-item img { transition: transform 0.7s ease; }
+        .gallery-item:hover img { transform: scale(1.1); }
+
+        /* Counter */
+        .counter-item { animation: countUp 0.8s ease-out forwards; }
+
+        /* Mobile menu */
+        .mobile-menu { transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); }
+        .mobile-menu.open { transform: translateX(0); }
+
+        /* Timeline */
+        .timeline-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, #991b1b, #C5A55A); transform: translateX(-50%); }
+        @media (max-width: 768px) { .timeline-line { left: 20px; } }
+
+        /* Struktur tree */
+        .struktur-card { position: relative; }
+        .struktur-card::before { content:''; position:absolute; top:-20px; left:50%; width:2px; height:20px; background:#991b1b; transform:translateX(-50%); }
+
+        /* Lightbox */
+        .lightbox { display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.9); justify-content:center; align-items:center; }
+        .lightbox.show { display:flex; }
+
+        /* Toast */
+        .toast { transform: translateY(100px); opacity: 0; transition: all 0.4s ease; }
+        .toast.show { transform: translateY(0); opacity: 1; }
+
+        /* Print */
+        @media print { .no-print { display: none !important; } }
+    </style>
+</head>
+<body class="bg-white text-gray-800">
+
+    <!-- Top Bar -->
+    <div class="bg-primary-950 text-white text-xs no-print">
+        <div class="max-w-7xl mx-auto px-4 py-2 flex flex-wrap justify-between items-center gap-2">
+            <div class="flex items-center gap-4">
+                <span class="flex items-center gap-1">
+                    <i data-lucide="phone" class="w-3 h-3"></i>
+                    +62 838-4263-0761
+                </span>
+                <span class="hidden sm:flex items-center gap-1">
+                    <i data-lucide="mail" class="w-3 h-3"></i>
+                    yoniftpsaijaan@gmail.com
+                </span>
+                <span class="hidden md:flex items-center gap-1">
+                    <i data-lucide="map-pin" class="w-3 h-3"></i>
+                    Kotabaru, Kalimantan Selatan
+                </span>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="https://www.instagram.com/yoniftp884" target="_blank" class="hover:text-army-gold transition-colors">
+                    <i data-lucide="instagram" class="w-3.5 h-3.5"></i>
+                </a>
+                <a href="#" class="hover:text-army-gold transition-colors">
+                    <i data-lucide="facebook" class="w-3.5 h-3.5"></i>
+                </a>
+                <a href="#" class="hover:text-army-gold transition-colors">
+                    <i data-lucide="youtube" class="w-3.5 h-3.5"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav id="navbar" class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md transition-all duration-300 no-print">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <!-- Logo -->
+                <a href="#beranda" class="flex items-center gap-3 flex-shrink-0">
+                    <div class="w-11 h-11 md:w-14 md:h-14 bg-primary-800 rounded-full flex items-center justify-center border-2 border-army-gold p-1" style="animation: pulse-glow 3s infinite;">
+                        <svg viewBox="0 0 100 100" class="w-full h-full">
+                             <img src="IMG_2088.PNG" alt="Logo Saijaan" width="150">
+                    </div>
+                    <div class="hidden sm:block">
+                        <div class="text-primary-800 font-bold text-sm md:text-base leading-tight">YONIF TP 884/SA-IJAAN</div>
+                        <div class="text-gray-500 text-[10px] md:text-xs">Bersatu-Berjuang-Berhasil</div>
+                    </div>
+                </a>
+
+                <!-- Desktop Menu -->
+                <div class="hidden lg:flex items-center gap-1">
+                    <a href="#beranda" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-700 transition-colors">Beranda</a>
+                    <a href="#profil" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-700 transition-colors">Profil</a>
+                    <a href="#struktur" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-700 transition-colors">Struktur</a>
+                    <a href="#giat" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-700 transition-colors">Giat</a>
+                    <a href="#dokumentasi" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-700 transition-colors">Dokumentasi</a>
+                    <a href="#kontak" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-700 transition-colors">Kontak</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="menuBtn" class="lg:hidden p-2 text-primary-800 hover:bg-primary-50 rounded-lg transition-colors">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="mobile-menu fixed inset-y-0 right-0 w-72 bg-white z-[60] shadow-2xl">
+        <div class="p-5 border-b border-gray-100 flex justify-between items-center">
+            <span class="font-bold text-primary-800">Menu</span>
+            <button id="closeMenuBtn" class="p-2 hover:bg-gray-100 rounded-lg">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+        <div class="p-4 space-y-1">
+            <a href="#beranda" class="mobile-link block px-4 py-3 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-700 font-medium transition-colors">Beranda</a>
+            <a href="#profil" class="mobile-link block px-4 py-3 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-700 font-medium transition-colors">Profil</a>
+            <a href="#struktur" class="mobile-link block px-4 py-3 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-700 font-medium transition-colors">Struktur</a>
+            <a href="#giat" class="mobile-link block px-4 py-3 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-700 font-medium transition-colors">Giat</a>
+            <a href="#dokumentasi" class="mobile-link block px-4 py-3 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-700 font-medium transition-colors">Dokumentasi</a>
+            <a href="#kontak" class="mobile-link block px-4 py-3 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-700 font-medium transition-colors">Kontak</a>
+        </div>
+        <div class="absolute bottom-6 left-4 right-4">
+            <a href="https://www.instagram.com/yoniftp884" target="_blank" class="flex items-center justify-center gap-2 w-full py-3 bg-gradient-to-r from-primary-700 to-primary-800 text-white rounded-xl font-semibold hover:from-primary-800 hover:to-primary-900 transition-all">
+                <i data-lucide="instagram" class="w-4 h-4"></i>
+                Ikuti Instagram
+            </a>
+        </div>
+    </div>
+    <div id="menuOverlay" class="fixed inset-0 bg-black/50 z-[55] hidden"></div>
+
+    <!-- Hero Section -->
+    <section id="beranda" class="relative h-[90vh] md:h-screen overflow-hidden">
+        <!-- Slides -->
+        <div class="hero-slide active">
+            <img src="IMG-20260218-WA0214.jpg" alt="Profil 1" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-r from-primary-950/90 via-primary-900/70 to-transparent"></div>
+        </div>
+        <div class="hero-slide">
+            <img src="c:\Users\USER\Downloads\R.jpg" alt="Profil 2" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-r from-primary-950/90 via-primary-900/70 to-transparent"></div>
+        </div>
+        <div class="hero-slide">
+            <img src="g:\My Drive\CAKO\_MG_2023.JPG" alt="Profil 3" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-r from-primary-950/90 via-primary-900/70 to-transparent"></div>
+        </div>
+
+        <!-- Content -->
+        <div class="absolute inset-0 flex items-center">
+            <div class="max-w-7xl mx-auto px-4 w-full">
+                <div class="max-w-2xl">
+                    <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-6" style="animation: fadeInUp 0.8s ease-out 0.2s both;">
+                        <span class="w-2 h-2 bg-army-gold rounded-full animate-pulse"></span>
+                        <span class="text-white/90 text-sm font-medium">BRIGIF 86/MANDAU — KODAM XXII/TB</span>
+                    </div>
+                    <h1 class="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-[1.05] tracking-tight mb-4" style="animation: fadeInUp 0.8s ease-out 0.4s both;">
+                        YONIF TP
+                        <span class="text-army-red"> 884</span><br>
+                        <span class="text-primary-400">/SA-IJAAN</span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-white/80 font-light leading-relaxed mb-8 max-w-lg" style="animation: fadeInUp 0.8s ease-out 0.6s both;">
+                        Batalyon Infanteri Teritorial Pembangunan, sebuah satuan yang tidak hanya bertugas menjaga pertahanan negara, tetapi juga berfungsi sebagai motor penggerak pembangunan daerah dan ketahanan pangan nasional.
+                    </p>
+                    <div class="flex flex-wrap gap-4" style="animation: fadeInUp 0.8s ease-out 0.8s both;">
+                        <a href="#profil" class="inline-flex items-center gap-2 bg-primary-700 hover:bg-primary-800 text-white px-8 py-4 rounded-xl font-semibold text-base transition-all hover:shadow-lg hover:shadow-primary-700/30 hover:-translate-y-0.5">
+                            <i data-lucide="info" class="w-5 h-5"></i>
+                            Profil Satuan
+                        </a>
+                        <a href="#giat" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 text-white px-8 py-4 rounded-xl font-semibold text-base transition-all hover:-translate-y-0.5">
+                            <i data-lucide="image" class="w-5 h-5"></i>
+                            Dokumentasi Giat
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide Indicators -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+            <button class="slide-dot w-10 h-1.5 rounded-full bg-white/40 transition-all active" data-slide="0"></button>
+            <button class="slide-dot w-10 h-1.5 rounded-full bg-white/40 transition-all" data-slide="1"></button>
+            <button class="slide-dot w-10 h-1.5 rounded-full bg-white/40 transition-all" data-slide="2"></button>
+        </div>
+
+        <!-- Scroll Down -->
+        <div class="absolute bottom-8 right-8 hidden md:flex flex-col items-center gap-2 text-white/60 text-xs" style="animation: float 3s ease-in-out infinite;">
+            <span>Scroll</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 animate-bounce"></i>
+        </div>
+    </section>
+
+    <!-- Running Text / Marquee -->
+    <div class="bg-primary-800 text-white py-2.5 overflow-hidden no-print">
+        <div class="flex whitespace-nowrap">
+            <div class="marquee-track flex items-center gap-8 text-sm font-medium">
+                <span class="flex items-center gap-6"><i data-lucide="star" class="w-3.5 h-3.5 text-army-gold"></i> BERSATU</span>
+                <span class="flex items-center gap-6"><i data-lucide="star" class="w-3.5 h-3.5 text-army-gold"></i> BERJUANG</span>
+                <span class="flex items-center gap-6"><i data-lucide="star" class="w-3.5 h-3.5 text-army-gold"></i> BERHASIL</span>
+                <span class="flex items-center gap-6"><i data-lucide="star" class="w-3.5 h-3.5 text-army-gold"></i> BERSATU</span>
+                <span class="flex items-center gap-6"><i data-lucide="star" class="w-3.5 h-3.5 text-army-gold"></i> BERJUANG</span>
+                <span class="flex items-center gap-6"><i data-lucide="star" class="w-3.5 h-3.5 text-army-gold"></i> BERHASIL</span>
+                <span class="flex items-center gap-6"><i data-lucide="star" class="w-3.5 h-3.5 text-army-gold"></i> BERSATU</span>
+                <span class="flex items-center gap-6"><i data-lucide="star" class="w-3.5 h-3.5 text-army-gold"></i> BERJUANG</span>
+                <span class="flex items-center gap-6"><i data-lucide="star" class="w-3.5 h-3.5 text-army-gold"></i> BERHASIL</span>
+                <span class="flex items-center gap-6"><i data-lucide="star" class="w-3.5 h-3.5 text-army-gold"></i> BERSATU</span>
+                <span class="flex items-center gap-6"><i data-lucide="star" class="w-3.5 h-3.5 text-army-gold"></i> BERJUANG</span>
+                <span class="flex items-center gap-6"><i data-lucide="star" class="w-3.5 h-3.5 text-army-gold"></i> BERHASIL</span>
+                <span class="flex items-center gap-6"><i data-lucide="star" class="w-3.5 h-3.5 text-army-gold"></i> BERSATU</span>
+                <span class="flex items-center gap-6"><i data-lucide="star" class="w-3.5 h-3.5 text-army-gold"></i> BERJUANG</span>
+                <span class="flex items-center gap-6"><i data-lucide="star" class="w-3.5 h-3.5 text-army-gold"></i> BERHASIL</span>
+                <span class="flex items-center gap-6"><i data-lucide="star" class="w-3.5 h-3.5 text-army-gold"></i> BERSATU</span>
+                <span class="flex items-center gap-6"><i data-lucide="star" class="w-3.5 h-3.5 text-army-gold"></i> BERJUANG</span>
+                <span class="flex items-center gap-6"><i data-lucide="star" class="w-3.5 h-3.5 text-army-gold"></i> BERHASIL</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profil Singkat -->
+    <section id="profil" class="py-20 md:py-28 bg-white garuda-pattern">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16 animate-on-scroll">
+                <span class="inline-flex items-center gap-2 bg-primary-100 text-primary-800 px-4 py-1.5 rounded-full text-sm font-semibold mb-4">
+                    <i data-lucide="building-2" class="w-4 h-4"></i>
+                    PROFIL SATUAN
+                </span>
+                <h2 class="text-3xl md:text-5xl font-bold text-gray-900 tracking-tight mb-4">
+                    Marshalling Area<br>
+                    <span class="text-primary-700">Yonif TP 884/Sa-ijaan</span>
+                </h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-primary-700 to-army-gold mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="animate-left">
+                    <div class="relative">
+                        <img src="c:\Users\USER\Desktop\web\ke.jpg" class="w-full rounded-2xl shadow-xl object-cover aspect-[4/3]">
+                        <div class="absolute top-4 left-4 bg-primary-800/90 backdrop-blur-sm text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
+                            <i data-lucide="map-pin" class="w-4 h-4 text-army-gold"></i>
+                            Kotabaru, Kalimantan Selatan
+                        </div>
+                    </div>
+                </div>
+
+                <div class="animate-right space-y-6">
+                    <p class="text-gray-600 text-lg leading-relaxed">
+                        <strong class="text-primary-800">Batalyon Infanteri Teritorial Pembangunan 884/Sa-ijaan</strong> Batalyon Infanteri Teritorial Pembangunan 884/SA-IJAAN atau Yonif TP 884/SA-IJAAN merupakan Yonif Teritorial Pembangunan bermarkas di Desa Semayap, Kecamatan Pulau Laut Utara, Kabupaten Kotabaru, Provinsi Kalimantan Selatan yang berada dibawah kendali <strong>Komando Brigade Infanteri 86/MANDAU</strong>, <strong>Kodam XXII/TAMBUN BUNGAI</strong>
+                    </p>
+                    <p class="text-gray-600 leading-relaxed">
+                        Dengan semangat <em class="text-primary-700 font-semibold">"Sa-ijaan"</em>, satuan ini terus berkomitmen dalam melaksanakan tugas-tugas teritorial dan pembangunan, mulai dari pembinaan ketahanan wilayah, pemberdayaan masyarakat, hingga operasi militer selain perang. Personel Yonif TP 884/Sa-ijaan senantiasa menjaga kesiapan dan profesionalisme dalam menghadapi setiap tantangan tugas.
+                    </p>
+
+                    <div class="grid grid-cols-2 gap-4 pt-4">
+                        <div class="bg-primary-50 border border-primary-100 rounded-xl p-4">
+                            <i data-lucide="shield-check" class="w-8 h-8 text-primary-700 mb-2"></i>
+                            <div class="text-sm text-gray-500">Yonif</div>
+                            <div class="font-bold text-primary-800 text-sm">Yonif TP 884/SA-IJAAN</div>
+                        </div>
+                        <div class="bg-primary-50 border border-primary-100 rounded-xl p-4">
+                            <i data-lucide="flag" class="w-8 h-8 text-primary-700 mb-2"></i>
+                            <div class="text-sm text-gray-500">Brigade</div>
+                            <div class="font-bold text-primary-800 text-sm">Brigade Infanteri 86/MANDAU</div>
+                        </div>
+                        <div class="bg-primary-50 border border-primary-100 rounded-xl p-4">
+                            <i data-lucide="swords" class="w-8 h-8 text-primary-700 mb-2"></i>
+                            <div class="text-sm text-gray-500">Kodam</div>
+                            <div class="font-bold text-primary-800 text-sm">Kodam XXII/TAMBUN BUNGAI</div>
+                        </div>
+                        <div class="bg-primary-50 border border-primary-100 rounded-xl p-4">
+                            <i data-lucide="map-pin" class="w-8 h-8 text-primary-700 mb-2"></i>
+                            <div class="text-sm text-gray-500">Lokasi</div>
+                            <div class="font-bold text-primary-800 text-sm">Kotabaru, Kalimantan Selatan</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Visi Misi -->
+    <section class="py-20 bg-primary-900 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-20 -left-20 w-72 h-72 bg-army-gold rounded-full blur-3xl"></div>
+            <div class="absolute bottom-20 -right-20 w-96 h-96 bg-primary-600 rounded-full blur-3xl"></div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 relative z-10">
+            <div class="text-center mb-16 animate-on-scroll">
+                <span class="inline-flex items-center gap-2 bg-white/10 text-army-gold px-4 py-1.5 rounded-full text-sm font-semibold mb-4 border border-white/10">
+                    <i data-lucide="target" class="w-4 h-4"></i>
+                    VISI & MISI
+                </span>
+                <h2 class="text-3xl md:text-5xl font-bold text-white tracking-tight mb-4">
+                    VISI & MISI
+                </h2>
+                <h2 class="text-3xl md:text-5xl font-bold text-white tracking-tight mb-4">
+                    DANYONIF TP 884/SA-IJAAN
+                </h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-primary-500 to-army-gold mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Visi -->
+                <div class="animate-left bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary-600 to-primary-800 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                        <i data-lucide="eye" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">VISI</h3>
+                    <p class="text-white/80 text-lg leading-relaxed">
+                        BERSAMA PRAJURIT YONIF TP 884/SA-IJAAN MEWUJUDKAN SATUAN YANG  <strong class="text-army-gold">HEBAT DAN UNGGUL </strong> DALAM MENDUKUNG TUGAS POKOK TNI AD
+                    </p>
+                </div>
+
+                <!-- Misi -->
+                <div class="animate-right bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300">
+                    <div class="w-16 h-16 bg-gradient-to-br from-army-gold to-army-brass rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                        <i data-lucide="list-checks" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">MISI</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start gap-3 text-white/80">
+                            <span class="w-6 h-6 bg-primary-700 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0 mt-0.5">1</span>
+                            MEMEPERKOKOH KEIMANAN DAN KETAQWAAN KEPADA TUHAN YANG MAHA ESA
+                        </li>
+                        <li class="flex items-start gap-3 text-white/80">
+                            <span class="w-6 h-6 bg-primary-700 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0 mt-0.5">2</span>
+                            ΜΕΜΑΝΤΑΡKAN SIKAP DAN PERILAKU PRAJURIT
+                        </li>
+                        <li class="flex items-start gap-3 text-white/80">
+                            <span class="w-6 h-6 bg-primary-700 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0 mt-0.5">3</span>
+                            MENINGKATKAN JASMANI DAN FISIK PRAJURIT
+                        </li>
+                        <li class="flex items-start gap-3 text-white/80">
+                            <span class="w-6 h-6 bg-primary-700 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0 mt-0.5">4</span>
+                           MEMBANGUN PRAJURIT DALAM BIDANG 3T (TEKNIK, TAKTIK DAN TERITORIAL)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Struktur Organisasi -->
+    <section id="struktur" class="py-20 md:py-28 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16 animate-on-scroll">
+                <span class="inline-flex items-center gap-2 bg-primary-100 text-primary-800 px-4 py-1.5 rounded-full text-sm font-semibold mb-4">
+                    <i data-lucide="network" class="w-4 h-4"></i>
+                    STRUKTUR ORGANISASI
+                </span>
+                <h2 class="text-3xl md:text-5xl font-bold text-gray-900 tracking-tight mb-4">
+                    Struktur <span class="text-primary-700">Organisasi</span>
+                </h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-primary-700 to-army-gold mx-auto rounded-full"></div>
+            </div>
+
+            <!-- Komandan -->
+            <div class="flex justify-center mb-8 animate-on-scroll">
+                <div class="bg-gradient-to-br from-primary-800 to-primary-900 text-white rounded-2xl p-6 text-center shadow-xl max-w-xs w-full border border-army-gold/30">
+                    <div class="w-20 h-20 bg-army-gold/20 rounded-full mx-auto mb-3 flex items-center justify-center">
+                        <i data-lucide="crown" class="w-10 h-10 text-army-gold"></i>
+                    </div>
+                    <h3 class="font-bold text-5g">LETKOL INF PRIYA FIRMANSYAH</h3>
+                    <p class="text-white/70 text-sm mt-1">KOMANDAN YONIF TP 884/SA-IJAAN</p>
+                    <div class="mt-3 inline-flex items-center gap-1 bg-army-gold/20 px-3 py-1 rounded-full text-xs text-army-gold font-semibold">
+                        <i data-lucide="star" class="w-3 h-3"></i> Komandan Satuan
+                    </div>
+                </div>
+            </div>
+
+            <!-- Staff & Pasi -->
+            <div class="flex justify-center mb-8 animate-on-scroll">
+                <div class="hidden md:block w-0.5 h-8 bg-primary-300"></div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 max-w-4xl mx-auto animate-on-scroll">
+                <div class="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100 card-hover">
+                    <div class="w-12 h-12 bg-primary-100 rounded-full mx-auto mb-2 flex items-center justify-center">
+                        <i data-lucide="user" class="w-6 h-6 text-primary-700"></i>
+                    </div>
+                    <h4 class="font-bold text-sm text-gray-900">Pasi-1</h4>
+                    <p class="text-xs text-gray-500 mt-1">Intelligence</p>
+                </div>
+                <div class="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100 card-hover">
+                    <div class="w-12 h-12 bg-primary-100 rounded-full mx-auto mb-2 flex items-center justify-center">
+                        <i data-lucide="brain" class="w-6 h-6 text-primary-700"></i>
+                    </div>
+                    <h4 class="font-bold text-sm text-gray-900">Pasi-2</h4>
+                    <p class="text-xs text-gray-500 mt-1">Operations</p>
+                </div>
+                <div class="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100 card-hover">
+                    <div class="w-12 h-12 bg-primary-100 rounded-full mx-auto mb-2 flex items-center justify-center">
+                        <i data-lucide="sword" class="w-6 h-6 text-primary-700"></i>
+                    </div>
+                    <h4 class="font-bold text-sm text-gray-900">Pasi-3</h4>
+                    <p class="text-xs text-gray-500 mt-1">Personnel</p>
+                </div>
+                <div class="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100 card-hover">
+                    <div class="w-12 h-12 bg-primary-100 rounded-full mx-auto mb-2 flex items-center justify-center">
+                        <i data-lucide="package" class="w-6 h-6 text-primary-700"></i>
+                    </div>
+                    <h4 class="font-bold text-sm text-gray-900">Pasi-4</h4>
+                    <p class="text-xs text-gray-500 mt-1">Logistics</p>
+                </div>
+            </div>
+
+            <!-- Kompi -->
+             <div class="flex justify-center mb-8 animate-on-scroll">
+    <div class="hidden md:block w-0.5 h-8 bg-primary-300"></div>
+</div>
+
+<div class="grid grid-cols-2 md:grid-cols-10 gap-4 max-w-5xl mx-auto animate-on-scroll">
+    
+    <!-- ===== BARIS ATAS: 4 Kartu (Dipusatkan) ===== -->
+    <div class="md:col-start-2 md:col-span-2 col-span-1 bg-primary-800 text-white rounded-xl p-5 text-center shadow-md card-hover">
+        <div class="w-12 h-12 bg-white/10 rounded-full mx-auto mb-2 flex items-center justify-center">
+            <i data-lucide="shield" class="w-6 h-6 text-army-gold"></i>
+        </div>
+        <h4 class="font-bold text-sm">Kompi Markas</h4>
+        <p class="text-xs text-white/60 mt-1">Kompi Markas Batalyon</p>
+    </div>
+
+    <div class="md:col-span-2 col-span-1 bg-primary-800 text-white rounded-xl p-5 text-center shadow-md card-hover">
+        <div class="w-12 h-12 bg-white/10 rounded-full mx-auto mb-2 flex items-center justify-center">
+            <i data-lucide="swords" class="w-6 h-6 text-army-gold"></i>
+        </div>
+        <h4 class="font-bold text-sm">Kompi Senapan A</h4>
+        <p class="text-xs text-white/60 mt-1">Kompi Senapan 1</p>
+    </div>
+
+    <div class="md:col-span-2 col-span-1 bg-primary-800 text-white rounded-xl p-5 text-center shadow-md card-hover">
+        <div class="w-12 h-12 bg-white/10 rounded-full mx-auto mb-2 flex items-center justify-center">
+            <i data-lucide="swords" class="w-6 h-6 text-army-gold"></i>
+        </div>
+        <h4 class="font-bold text-sm">Kompi Senapan B</h4>
+        <p class="text-xs text-white/60 mt-1">Kompi Senapan 2</p>
+    </div>
+
+    <div class="md:col-span-2 col-span-1 bg-primary-800 text-white rounded-xl p-5 text-center shadow-md card-hover">
+        <div class="w-12 h-12 bg-white/10 rounded-full mx-auto mb-2 flex items-center justify-center">
+            <i data-lucide="swords" class="w-6 h-6 text-army-gold"></i>
+        </div>
+        <h4 class="font-bold text-sm">Kompi Senapan C</h4>
+        <p class="text-xs text-white/60 mt-1">Kompi Senapan 3</p>
+    </div>
+
+    <!-- ===== BARIS BAWAH: 5 Kartu ===== -->
+    <div class="md:col-span-2 col-span-1 bg-primary-800 text-white rounded-xl p-5 text-center shadow-md card-hover">
+        <div class="w-12 h-12 bg-white/10 rounded-full mx-auto mb-2 flex items-center justify-center">
+            <i data-lucide="crosshair" class="w-6 h-6 text-army-gold"></i>
+        </div>
+        <h4 class="font-bold text-sm">Kompi Bantuan</h4>
+        <p class="text-xs text-white/60 mt-1">Kompi Bantuan Batalyon</p>
+    </div>
+
+    <div class="md:col-span-2 col-span-1 bg-primary-800 text-white rounded-xl p-5 text-center shadow-md card-hover">
+        <div class="w-12 h-12 bg-white/10 rounded-full mx-auto mb-2 flex items-center justify-center">
+            <i data-lucide="tractor" class="w-6 h-6 text-army-gold"></i>
+        </div>
+        <h4 class="font-bold text-sm">Kompi Pertanian</h4>
+        <p class="text-xs text-white/60 mt-1">Kompi Pertanian Batalyon</p>
+    </div>
+
+    <div class="md:col-span-2 col-span-1 bg-primary-800 text-white rounded-xl p-5 text-center shadow-md card-hover">
+        <div class="w-12 h-12 bg-white/10 rounded-full mx-auto mb-2 flex items-center justify-center">
+            <i data-lucide="compass" class="w-6 h-6 text-army-gold"></i>
+        </div>
+        <h4 class="font-bold text-sm">Kompi Peternakan</h4>
+        <p class="text-xs text-white/60 mt-1">Kompi Peternakan Batalyon</p>
+    </div>
+
+    <div class="md:col-span-2 col-span-1 bg-primary-800 text-white rounded-xl p-5 text-center shadow-md card-hover">
+        <div class="w-12 h-12 bg-white/10 rounded-full mx-auto mb-2 flex items-center justify-center">
+            <i data-lucide="chess-rook" class="w-6 h-6 text-army-gold"></i>
+        </div>
+        <h4 class="font-bold text-sm">Kompi Zeni</h4>
+        <p class="text-xs text-white/60 mt-1">Kompi Zeni Konstruksi Batalyon</p>
+    </div>
+
+    <div class="md:col-span-2 col-span-1 bg-primary-800 text-white rounded-xl p-5 text-center shadow-md card-hover">
+        <div class="w-12 h-12 bg-white/10 rounded-full mx-auto mb-2 flex items-center justify-center">
+            <i data-lucide="cross" class="w-6 h-6 text-army-gold"></i>
+        </div>
+        <h4 class="font-bold text-sm">Kompi Kesehatan</h4>
+        <p class="text-xs text-white/60 mt-1">Kompi Kesehatan Batalyon</p>
+    </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kegiatan -->
+    <section id="giat" class="py-20 md:py-28 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16 animate-on-scroll">
+                <span class="inline-flex items-center gap-2 bg-primary-100 text-primary-800 px-4 py-1.5 rounded-full text-sm font-semibold mb-4">
+                    <i data-lucide="newspaper" class="w-4 h-4"></i>
+                    GIAT YONIF TP 884/SA-IJAAN
+                </span>
+                <h2 class="text-3xl md:text-5xl font-bold text-gray-900 tracking-tight mb-4">
+                    GIAT <span class="text-primary-700">YONIF TP 884/SA-IJAAN</span>
+                </h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-primary-700 to-army-gold mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Kegiatan 1 -->
+                <article class="card-hover bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm animate-on-scroll group">
+                    <div class="relative overflow-hidden aspect-[4/3]">
+                        <img src="i:\My Drive\DOKUMENTASI YONTP884 SI\FOTO KOMANDAN\DANYONIF UPC JAMDAN SENIN 25 MEI 2026\_MG_8173.JPG" alt="UPACARA" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute top-3 left-3 bg-primary-800 text-white text-xs px-3 py-1 rounded-full font-semibold">UPACARA</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 text-xs text-gray-400 mb-3">
+                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                            <span>4 MEI 2026</span>
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-900 mb-2 group-hover:text-primary-700 transition-colors">UPACARA BENDERA</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed line-clamp-3">Upacara bendera tanggal 4 Mei 2026 di Yonif TP 884/Sa-ijaan dipimpin langsung oleh Komandan Batalyon, Letkol Inf Priya Firmansyah. Kegiatan berlangsung dengan tertib, khidmat, dan penuh semangat sebagai wujud disiplin serta loyalitas prajurit.</p>
+                        <a href="https://www.instagram.com/reel/DYPamhYKaSY/?igsh=MWVlNmFmb2ZqbGhtcQ==" class="inline-flex items-center gap-1 mt-4 text-primary-700 text-sm font-semibold hover:gap-2 transition-all">
+                            Baca Selengkapnya <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Kegiatan 2 -->
+                <article class="card-hover bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm animate-on-scroll group">
+                    <div class="relative overflow-hidden aspect-[4/3]">
+                        <img src="h:\My Drive\PAN LAN\_MG_5586.JPG" alt="MENEMBAK" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                         <div class="absolute top-3 left-3 bg-primary-800 text-white text-xs px-3 py-1 rounded-full font-semibold">MENEMBAK</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 text-xs text-gray-400 mb-3">
+                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                            <span>21 MEI 2026</span>
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-900 mb-2 group-hover:text-primary-700 transition-colors">MENEMBAK TEMPUR LANJUTAN</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed line-clamp-3">Prajurit Yonif TP 884/Sa-ijaan melaksanakan latihan menembak reaksi lanjutan (Bakpurlan). Dalam rangka memelihara dan meningkatkan kemampuan teknis, ketepatan tembak, serta naluri tempur, telah dilaksanakan kegiatan Latihan Menembak Reaksi Lanjutan bagi seluruh prajurit. </p>
+                        <a href="https://www.instagram.com/reel/DYmcrbCKmqO/?utm_source=ig_web_button_share_sheet" class="inline-flex items-center gap-1 mt-4 text-primary-700 text-sm font-semibold hover:gap-2 transition-all">
+                            Baca Selengkapnya <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Kegiatan 3 -->
+                <article class="card-hover bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm animate-on-scroll group">
+                    <div class="relative overflow-hidden aspect-[4/3]">
+                        <img src="i:\My Drive\DOKUMENTASI YONTP884 SI\KARYA BAKTI\BAKTI KARYA\IMG-20260530-WA0122(1).jpg" alt="KARYA BAKTI" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                         <div class="absolute top-3 left-3 bg-primary-800 text-white text-xs px-3 py-1 rounded-full font-semibold">KARYA BAKTI</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 text-xs text-gray-400 mb-3">
+                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                            <span>1 MEI 2026</span>
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-900 mb-2 group-hover:text-primary-700 transition-colors">KARYA BAKTI</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed line-clamp-3">Prajurit Yonif TP 884/Sa-ijaan melaksanakan karya bakti dan gotong royong di tempat kotabaru hulu. Prajurit Melaksanakan kerja bakti dan gotong royong bersama masyarakat sekitar kotabaru hulu, tujuan melaksanakan kegiatannya untuk mempererat tali persaudaraan, meningkatkan kerukunan, kebersamaan, dan memperkuat hubungan antarwarga sehingga tercipta lingkungan yang harmonis serta menumbuhkan rasa kepedulian dan tanggung jawab. </p>
+                        <a href="https://www.instagram.com/reel/DXzI_g9KMor/?igsh=Ymk4ZXIyNG04a3Nu" class="inline-flex items-center gap-1 mt-4 text-primary-700 text-sm font-semibold hover:gap-2 transition-all">
+                            Lihat Selengkapnya <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Kegiatan 4 -->
+                <article class="card-hover bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm animate-on-scroll group">
+                    <div class="relative overflow-hidden aspect-[4/3]">
+                        <img src="i:\My Drive\DOKUMENTASI YONTP884 SI\KARYA BAKTI\BAKTI KESEHATAN\IMG-20260530-WA0120.jpg" alt="BAKTI KESEHATAN" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                         <div class="absolute top-3 left-3 bg-primary-800 text-white text-xs px-3 py-1 rounded-full font-semibold">BAKTI KESEHATAN</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 text-xs text-gray-400 mb-3">
+                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                            <span>7 MARET 2026</span>
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-900 mb-2 group-hover:text-primary-700 transition-colors">BAKTI KESEHATAN</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed line-clamp-3">Prajurit Yonif TP 884/Sa-ijaan melaksanakan Bakti Kesehatan, Kegiatan pengobatan gratis bagi masyarakat di Kotabaru, bekerja sama dengan Dinas Kesehatan daerah...</p>
+                        <a href="https://www.instagram.com/reel/DVmwiC5kvpt/?igsh=MWtkNWx3dm5icHV6dg==" class="inline-flex items-center gap-1 mt-4 text-primary-700 text-sm font-semibold hover:gap-2 transition-all">
+                            Lihat Selengkapnya <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Kegiatan 5 -->
+                <article class="card-hover bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm animate-on-scroll group">
+                    <div class="relative overflow-hidden aspect-[4/3]">
+                        <img src="i:\My Drive\DOKUMENTASI YONTP884 SI\KARYA BAKTI\BAKTI SOSIAL\motion_photo_3576805045104884639.jpg" alt="Patroli" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute top-3 left-3 bg-primary-800 text-white text-xs px-3 py-1 rounded-full font-semibold">BAKTI SOSIAL</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 text-xs text-gray-400 mb-3">
+                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                            <span>14 MARET 2026</span>
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-900 mb-2 group-hover:text-primary-700 transition-colors">BAKTI SOSIAL</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed line-clamp-3">Prajurit Yonif TP 884/SI melaksanakan karya bakti lingkungan bersama masyarakat dan memberikan sembako gratis di lokasi desa Hilir Muara.</p>
+                        <a href="https://www.instagram.com/reel/DV2dKyVkmi5/?igsh=Y2E5cDg2NzlvZDQz" class="inline-flex items-center gap-1 mt-4 text-primary-700 text-sm font-semibold hover:gap-2 transition-all">
+                            Lihat Selengkapnya <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Kegiatan 6 -->
+                <article class="card-hover bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm animate-on-scroll group">
+                    <div class="relative overflow-hidden aspect-[4/3]">
+                        <img src="i:\My Drive\DOKUMENTASI YONTP884 SI\KARYA BAKTI\WAWASAN KEBANGSAAN\IMG-20260530-WA0113.jpg" alt="WAWASAN KEBANGSAAN" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute top-3 left-3 bg-primary-800 text-white text-xs px-3 py-1 rounded-full font-semibold">WAWASAN KEBANGSAAN</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 text-xs text-gray-400 mb-3">
+                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                            <span>1 MEI 2026</span>
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-900 mb-2 group-hover:text-primary-700 transition-colors">WAWASAN KEBANGSAAN</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed line-clamp-3">Para prajurit melaksanakan baksos di SD 1 dan 2 Kotabaru Hulu, materi yang di sampaikan dari prajurit untuk anak anak SD yaitu tentang wawasan kebangsaan dan mengajarkan tentang PBB (Peraturan Baris Berbaris). </p>
+                        <a href="https://www.instagram.com/reel/DXzCjtUKrz_/?igsh=bjdrbzY5dWRmbmY2" class="inline-flex items-center gap-1 mt-4 text-primary-700 text-sm font-semibold hover:gap-2 transition-all">
+                            Lihat Selengkapnya <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galeri -->
+    <section id="dokumentasi" class="py-20 md:py-28 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16 animate-on-scroll">
+                <span class="inline-flex items-center gap-2 bg-primary-100 text-primary-800 px-4 py-1.5 rounded-full text-sm font-semibold mb-4">
+                    <i data-lucide="camera" class="w-4 h-4"></i>
+                    DOKUMENTASI GIAT YONIF TP 884/SA-IJAAN
+                </span>
+                <h2 class="text-3xl md:text-5xl font-bold text-gray-900 tracking-tight mb-4">
+                    DOKUMENTASI GIAT <span class="text-primary-700">YONIF TP 884/SA-IJAAN</span>
+                </h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-primary-700 to-army-gold mx-auto rounded-full"></div>
+            </div>
+
+            <!-- Filter -->
+            <div class="flex flex-wrap justify-center gap-2 mb-10 animate-on-scroll">
+                <button class="gallery-filter active bg-primary-800 text-white px-5 py-2 rounded-full text-sm font-medium transition-all" data-filter="all">Semua</button>
+            </div>
+
+            <div id="galleryGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div class="gallery-item rounded-xl overflow-hidden cursor-pointer animate-scale group" data-category="Renang">
+                    <div class="relative aspect-square">
+                        <img src="i:\My Drive\TON TANGKAS RENANG\_MG_3704.JPG" alt="Renang" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-primary-900/0 group-hover:bg-primary-900/60 transition-all duration-300 flex items-center justify-center">
+                            <i data-lucide="maximize-2" class="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="gallery-item rounded-xl overflow-hidden cursor-pointer animate-scale group" data-category="Garjas">
+                    <div class="relative aspect-square">
+                        <img src="i:\My Drive\GARJAS DAY 1\_MG_3886.JPG" alt="Garjas 1" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-primary-900/0 group-hover:bg-primary-900/60 transition-all duration-300 flex items-center justify-center">
+                            <i data-lucide="maximize-2" class="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="gallery-item rounded-xl overflow-hidden cursor-pointer animate-scale group" data-category="Lari Jat">
+                    <div class="relative aspect-square">
+                        <img src="h:\My Drive\LARI JAT\_MG_8415.JPG" alt="Lari Jat" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-primary-900/0 group-hover:bg-primary-900/60 transition-all duration-300 flex items-center justify-center">
+                            <i data-lucide="maximize-2" class="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="gallery-item rounded-xl overflow-hidden cursor-pointer animate-scale group" data-category="Upacara">
+                    <div class="relative aspect-square">
+                        <img src="h:\My Drive\UPC\_MG_8152.JPG" alt="Upacara" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-primary-900/0 group-hover:bg-primary-900/60 transition-all duration-300 flex items-center justify-center">
+                            <i data-lucide="maximize-2" class="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="gallery-item rounded-xl overflow-hidden cursor-pointer animate-scale group" data-category="wawasan">
+                    <div class="relative aspect-square">
+                        <img src="c:\Users\USER\Desktop\web\db59db8d-e0ee-4d07-a239-7f0766863d28.jpg" alt="wawasan" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-primary-900/0 group-hover:bg-primary-900/60 transition-all duration-300 flex items-center justify-center">
+                            <i data-lucide="maximize-2" class="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="gallery-item rounded-xl overflow-hidden cursor-pointer animate-scale group" data-category="lari">
+                    <div class="relative aspect-square">
+                        <img src="c:\Users\USER\Desktop\web\600f99c0-12d8-4e09-a613-c7cb24ff9eff.jpg" alt="Lari" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-primary-900/0 group-hover:bg-primary-900/60 transition-all duration-300 flex items-center justify-center">
+                            <i data-lucide="maximize-2" class="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="gallery-item rounded-xl overflow-hidden cursor-pointer animate-scale group" data-category="karate">
+                    <div class="relative aspect-square">
+                        <img src="c:\Users\USER\Desktop\web\a61c5fe8-c1dc-4bb6-a409-b29f2b0658d7.jpg" alt="Karate" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-primary-900/0 group-hover:bg-primary-900/60 transition-all duration-300 flex items-center justify-center">
+                            <i data-lucide="maximize-2" class="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="gallery-item rounded-xl overflow-hidden cursor-pointer animate-scale group" data-category="Alarm">
+                    <div class="relative aspect-square">
+                        <img src="c:\Users\USER\Desktop\web\5dbca712-6c8e-43d1-a9fb-d34a7b27095a.jpg" alt="Alarm" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-primary-900/0 group-hover:bg-primary-900/60 transition-all duration-300 flex items-center justify-center">
+                            <i data-lucide="maximize-2" class="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Moto / Semboyan -->
+    <section class="py-20 bg-gradient-to-br from-primary-900 via-primary-800 to-primary-950 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-5" style="background-image: repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(255,255,255,0.05) 35px, rgba(255,255,255,0.05) 36px);"></div>
+        <div class="max-w-4xl mx-auto px-4 text-center relative z-10 animate-on-scroll">
+            <div class="w-20 h-20 bg-army-gold/20 rounded-full mx-auto mb-8 flex items-center justify-center" style="animation: float 3s ease-in-out infinite;">
+                <i data-lucide="flame" class="w-10 h-10 text-army-gold"></i>
+            </div>
+            <h2 class="text-4xl md:text-10xl font-black text-army-gold mb-6 tracking-tight">"BERSATU BERJUANG BERHASIL"</h2>
+            <p class="text-xl md:text-2xl text-white/90 font-light leading-relaxed max-w-2xl mx-auto mb-8">
+                Semboyan yang melambangkan semangat kebersamaan, pengabdian, dan ketangguhan prajurit Yonif TP 884 dalam menjaga keamanan dan pembangunan wilayah.
+            </p>
+            <div class="flex flex-wrap justify-center gap-6 text-white/70 text-sm">
+                <span class="flex items-center gap-2"><i data-lucide="users" class="w-4 h-4 text-primary-400"></i> BERSATU</span>
+                 <span class="flex items-center gap-2"><i data-lucide="award" class="w-4 h-4 text-primary-400"></i> BERJUANG</span>
+                <span class="flex items-center gap-2"><i data-lucide="cloud-check" class="w-4 h-4 text-primary-400"></i> BERHASIL</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kontak -->
+    <section id="kontak" class="py-20 md:py-28 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16 animate-on-scroll">
+                <span class="inline-flex items-center gap-2 bg-primary-100 text-primary-800 px-4 py-1.5 rounded-full text-sm font-semibold mb-4">
+                    <i data-lucide="phone" class="w-4 h-4"></i>
+                    HUBUNGI KAMI
+                </span>
+                <h2 class="text-3xl md:text-5xl font-bold text-gray-900 tracking-tight mb-4">
+                    Kontak <span class="text-primary-700">Satuan</span>
+                </h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-primary-700 to-army-gold mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Map & Info -->
+                <div class="animate-left space-y-6">
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div class="bg-primary-50 rounded-xl p-5 border border-primary-100">
+                            <i data-lucide="map-pin" class="w-6 h-6 text-primary-700 mb-2"></i>
+                            <div class="text-sm text-gray-500 mb-1">Alamat</div>
+                            <div class="font-semibold text-gray-800 text-sm">Jl. A. Yani, Kotabaru, Kalimantan SelatanQ628+9WF, Dirgahayu, Kec. Pulau Laut Utara, Kab. Kotabaru, Kalimantan Selatan</div>
+                        </div>
+                        <div class="bg-primary-50 rounded-xl p-5 border border-primary-100">
+                            <i data-lucide="phone" class="w-6 h-6 text-primary-700 mb-2"></i>
+                            <div class="text-sm text-gray-500 mb-1">Telepon</div>
+                            <div class="font-semibold text-gray-800 text-sm">+62 838 4263 0761</div>
+                        </div>
+                        <div class="bg-primary-50 rounded-xl p-5 border border-primary-100">
+                            <i data-lucide="mail" class="w-6 h-6 text-primary-700 mb-2"></i>
+                            <div class="text-sm text-gray-500 mb-1">Email</div>
+                            <div class="font-semibold text-gray-800 text-sm">yoniftpsaijaan@gmail.com</div>
+                        </div>
+                        <div class="bg-primary-50 rounded-xl p-5 border border-primary-100">
+                            <i data-lucide="instagram" class="w-6 h-6 text-primary-700 mb-2"></i>
+                            <div class="text-sm text-gray-500 mb-1">Instagram</div>
+                            <a href="https://www.instagram.com/yoniftp884" target="_blank" class="font-semibold text-primary-700 text-sm hover:underline">@yoniftp884</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="animate-right">
+                    <form id="contactForm" class="bg-gray-50 rounded-2xl p-8 border border-gray-100">
+                        <h3 class="text-xl font-bold text-gray-900 mb-6">Kirim Pesan</h3>
+                        <div class="space-y-5">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Lengkap</label>
+                                <input type="text" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all bg-white" placeholder="Masukkan nama Anda">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
+                                <input type="email" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all bg-white" placeholder="Masukkan email Anda">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Subjek</label>
+                                <input type="text" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all bg-white" placeholder="Subjek pesan">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Pesan</label>
+                                <textarea rows="4" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all bg-white resize-none" placeholder="Tulis pesan Anda..."></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-primary-800 hover:bg-primary-900 text-white py-3.5 rounded-xl font-semibold transition-all hover:shadow-lg hover:shadow-primary-800/30 flex items-center justify-center gap-2">
+                                <i data-lucide="send" class="w-4 h-4"></i>
+                                Kirim Pesan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-primary-950 text-white no-print">
+        <!-- Main Footer -->
+        <div class="max-w-7xl mx-auto px-4 py-16">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
+                <!-- Logo & Description -->
+                <div class="lg:col-span-1">
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="w-12 h-12 bg-primary-800 rounded-full flex items-center justify-center border-2 border-army-gold p-1">
+                            <svg viewBox="0 0 100 100" class="w-full h-full">
+                                  <img src="IMG_2088.PNG" alt="Logo Saijaan" width="150">
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm">Yonif TP 884/Sa-ijaan</div>
+                            <div class="text-xs text-white/50">Bersatu, Berjuang, Berhasil</div>
+                        </div>
+                    </div>
+                    <p class="text-white/60 text-sm leading-relaxed mb-5">
+Batalyon Infanteri Teritorial Pembangunan, sebuah satuan yang tidak hanya bertugas menjaga pertahanan negara, tetapi juga berfungsi sebagai motor penggerak pembangunan daerah dan ketahanan pangan nasional.                    </p>
+                    <div class="flex gap-3">
+                        <a href="https://www.instagram.com/yoniftp884" target="_blank" class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-primary-700 transition-colors">
+                            <i data-lucide="badge-alert" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-primary-700 transition-colors">
+                            <i data-lucide="badge-alert" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-primary-700 transition-colors">
+                            <i data-lucide="badge-alert" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="font-bold text-army-gold mb-5 text-sm uppercase tracking-wider">Tautan Cepat</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#beranda" class="text-white/60 hover:text-white text-sm transition-colors flex items-center gap-2"><i data-lucide="chevron-right" class="w-3 h-3"></i>Beranda</a></li>
+                        <li><a href="#profil" class="text-white/60 hover:text-white text-sm transition-colors flex items-center gap-2"><i data-lucide="chevron-right" class="w-3 h-3"></i>Profil Satuan</a></li>
+                        <li><a href="#giat" class="text-white/60 hover:text-white text-sm transition-colors flex items-center gap-2"><i data-lucide="chevron-right" class="w-3 h-3"></i>Giat</a></li>
+                        <li><a href="#struktur" class="text-white/60 hover:text-white text-sm transition-colors flex items-center gap-2"><i data-lucide="chevron-right" class="w-3 h-3"></i>Struktur Organisasi</a></li>
+                        <li><a href="#dokumentasi" class="text-white/60 hover:text-white text-sm transition-colors flex items-center gap-2"><i data-lucide="chevron-right" class="w-3 h-3"></i>Dokumentasi</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div>
+                    <h4 class="font-bold text-army-gold mb-5 text-sm uppercase tracking-wider">Kontak</h4>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-primary-400 flex-shrink-0 mt-0.5"></i>
+                            <span class="text-white/60 text-sm">Jl. A. Yani, Kotabaru, Kalimantan SelatanQ628+9WF, Dirgahayu, Kec. Pulau Laut Utara, Kab. Kotabaru, Kalimantan Selatan</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="phone" class="w-5 h-5 text-primary-400 flex-shrink-0"></i>
+                            <span class="text-white/60 text-sm">+62 838-4263-0761</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="mail" class="w-5 h-5 text-primary-400 flex-shrink-0"></i>
+                            <span class="text-white/60 text-sm">yoniftpsaijaan@gmail.com</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="instagram" class="w-5 h-5 text-primary-400 flex-shrink-0"></i>
+                            <a href="https://www.instagram.com/yoniftp884" target="_blank" class="text-white/60 text-sm hover:text-white transition-colors">@yoniftp884</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Footer -->
+        <div class="border-t border-white/10">
+            <div class="max-w-7xl mx-auto px-4 py-5 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-white/40 text-xs text-center md:text-left">
+                    © 2026 Yonif TP 884/Sa-ijaan. Hak Cipta Dilindungi.
+                </p>
+                <div class="flex items-center gap-1 text-white/40 text-xs">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5 text-army-gold"></i>
+                    <span>PenyonifTP884SI</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <button class="absolute top-4 right-4 text-white hover:text-primary-400 transition-colors z-10" onclick="closeLightbox()">
+            <i data-lucide="x" class="w-8 h-8"></i>
+        </button>
+        <img id="lightboxImg" src="" alt="Gallery Image" class="max-w-[90vw] max-h-[90vh] object-contain rounded-lg">
+    </div>
+
+    <!-- Back to Top -->
+    <button id="backToTop" class="fixed bottom-6 right-6 w-12 h-12 bg-primary-800 text-white rounded-full shadow-lg flex items-center justify-center z-50 opacity-0 translate-y-4 transition-all duration-300 hover:bg-primary-700 no-print">
+        <i data-lucide="chevron-up" class="w-5 h-5"></i>
+    </button>
+
+    <!-- Toast -->
+    <div id="toast" class="toast fixed bottom-6 left-1/2 -translate-x-1/2 bg-primary-800 text-white px-6 py-3 rounded-xl shadow-xl z-[100] flex items-center gap-2">
+        <i data-lucide="check-circle" class="w-5 h-5 text-army-gold"></i>
+        <span id="toastMessage">Pesan berhasil dikirim!</span>
+    </div>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons({ attrs: { 'stroke-width': 1.5 } });
+
+        // ===== Mobile Menu =====
+        const menuBtn = document.getElementById('menuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function openMenu() {
+            mobileMenu.classList.add('open');
+            menuOverlay.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeMenu() {
+            mobileMenu.classList.remove('open');
+            menuOverlay.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+        menuBtn.addEventListener('click', openMenu);
+        closeMenuBtn.addEventListener('click', closeMenu);
+        menuOverlay.addEventListener('click', closeMenu);
+        mobileLinks.forEach(link => link.addEventListener('click', closeMenu));
+
+        // ===== Hero Slider =====
+        const slides = document.querySelectorAll('.hero-slide');
+        const dots = document.querySelectorAll('.slide-dot');
+        let currentSlide = 0;
+        let slideInterval;
+
+        function goToSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
+            dots[currentSlide].style.backgroundColor = 'rgba(255,255,255,0.4)';
+            currentSlide = n;
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+            dots[currentSlide].style.backgroundColor = '#C5A55A';
+        }
+
+        function nextSlide() {
+            goToSlide((currentSlide + 1) % slides.length);
+        }
+
+        function startSlider() {
+            dots[currentSlide].style.backgroundColor = '#C5A55A';
+            slideInterval = setInterval(nextSlide, 5000);
+        }
+
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                clearInterval(slideInterval);
+                goToSlide(parseInt(dot.dataset.slide));
+                startSlider();
+            });
+        });
+
+        startSlider();
+
+        // ===== Scroll Animations =====
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-on-scroll, .animate-left, .animate-right, .animate-scale').forEach(el => {
+            observer.observe(el);
+        });
+
+        // ===== Counter Animation =====
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counter = entry.target;
+                    const target = parseInt(counter.dataset.target);
+                    const duration = 2000;
+                    const step = target / (duration / 16);
+                    let current = 0;
+
+                    const timer = setInterval(() => {
+                        current += step;
+                        if (current >= target) {
+                            counter.textContent = target + '+';
+                            clearInterval(timer);
+                        } else {
+                            counter.textContent = Math.floor(current) + '+';
+                        }
+                    }, 16);
+
+                    counterObserver.unobserve(counter);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.counter').forEach(el => counterObserver.observe(el));
+
+        // ===== Navbar Scroll Effect =====
+        const navbar = document.getElementById('navbar');
+        let lastScroll = 0;
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+
+            if (currentScroll > 100) {
+                navbar.classList.add('shadow-lg');
+                navbar.style.borderBottom = '2px solid #991b1b';
+            } else {
+                navbar.classList.remove('shadow-lg');
+                navbar.style.borderBottom = 'none';
+            }
+
+            lastScroll = currentScroll;
+        });
+
+        // ===== Back to Top =====
+        const backToTop = document.getElementById('backToTop');
+
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 500) {
+                backToTop.style.opacity = '1';
+                backToTop.style.transform = 'translateY(0)';
+            } else {
+                backToTop.style.opacity = '0';
+                backToTop.style.transform = 'translateY(16px)';
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ===== Gallery Filter =====
+        const filterBtns = document.querySelectorAll('.gallery-filter');
+        const galleryItems = document.querySelectorAll('.gallery-item');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-primary-800', 'text-white');
+                    b.classList.add('bg-white', 'text-gray-600', 'border', 'border-gray-200');
+                });
+                btn.classList.remove('bg-white', 'text-gray-600', 'border', 'border-gray-200');
+                btn.classList.add('bg-primary-800', 'text-white');
+
+                const filter = btn.dataset.filter;
+
+                galleryItems.forEach(item => {
+                    if (filter === 'all' || item.dataset.category === filter) {
+                        item.style.display = '';
+                        setTimeout(() => {
+                            item.style.opacity = '1';
+                            item.style.transform = 'scale(1)';
+                        }, 50);
+                    } else {
+                        item.style.opacity = '0';
+                        item.style.transform = 'scale(0.8)';
+                        setTimeout(() => {
+                            item.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            });
+        });
+
+        // ===== Lightbox =====
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+
+        galleryItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const img = item.querySelector('img');
+                lightboxImg.src = img.src;
+                lightbox.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        function closeLightbox() {
+            lightbox.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
+        // ===== Contact Form =====
+        const contactForm = document.getElementById('contactForm');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            showToast('Pesan Anda berhasil dikirim! Terima kasih.');
+            contactForm.reset();
+        });
+
+        function showToast(message) {
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+
+        // ===== Active Nav Link on Scroll =====
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (pageYOffset >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active', 'text-primary-700');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active', 'text-primary-700');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
